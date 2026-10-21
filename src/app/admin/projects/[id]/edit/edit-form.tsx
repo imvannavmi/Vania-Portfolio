@@ -2,8 +2,12 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../../../../lib/supabase/client";
+import ProjectContentEditor, {
+  type ProjectContentBlock,
+} from "@/components/admin/project-content-editor";
 
 type Project = {
   id: string;
@@ -12,6 +16,8 @@ type Project = {
   slug: string;
   summary_id: string;
   summary_en: string;
+  content_id: unknown;
+  content_en: unknown;
   tools: string[] | null;
   github_url: string | null;
   demo_url: string | null;
@@ -20,6 +26,76 @@ type Project = {
   cover_image_url: string | null;
 };
 
+function normalizeProjectContent(
+  value: unknown,
+  prefix: string
+): ProjectContentBlock[] {
+  if (!Array.isArray(value)) return [];
+
+  const validTypes = [
+    "paragraph",
+    "list",
+    "steps",
+    "code",
+    "image",
+    "test-results",
+  ] as const;
+
+  return value.flatMap((item, index) => {
+    if (!item || typeof item !== "object") return [];
+
+    const raw = item as Record<string, unknown>;
+    const type = validTypes.includes(
+      raw.type as (typeof validTypes)[number]
+    )
+      ? (raw.type as ProjectContentBlock["type"])
+      : "paragraph";
+
+    const textValue = (...values: unknown[]) =>
+      values.find((value) => typeof value === "string") as
+        | string
+        | undefined;
+
+    const items = Array.isArray(raw.items)
+      ? raw.items.filter(
+          (entry): entry is string => typeof entry === "string"
+        )
+      : [];
+
+    const tests = Array.isArray(raw.tests)
+      ? raw.tests.flatMap((entry) => {
+          if (!entry || typeof entry !== "object") return [];
+
+          const test = entry as Record<string, unknown>;
+          const status: "passed" | "failed" | "pending" =
+            test.status === "passed" ||
+            test.status === "failed" ||
+            test.status === "pending"
+              ? test.status
+              : "pending";
+
+          return [{
+            scenario: textValue(test.scenario) ?? "",
+            expected: textValue(test.expected) ?? "",
+            actual: textValue(test.actual) ?? "",
+            status,
+          }];
+        })
+      : [];
+
+    return [{
+      id: textValue(raw.id) ?? `${prefix}-${index + 1}`,
+      type,
+      heading: textValue(raw.heading, raw.title) ?? "",
+      body: textValue(raw.body, raw.text, raw.content) ?? "",
+      items,
+      imageUrl: textValue(raw.imageUrl, raw.image_url) ?? "",
+      imageAlt: textValue(raw.imageAlt, raw.image_alt) ?? "",
+      language: textValue(raw.language) ?? "text",
+      tests,
+    }];
+  });
+}
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
@@ -35,6 +111,12 @@ export default function EditProjectForm({
   const [slug, setSlug] = useState(project.slug);
   const [summaryId, setSummaryId] = useState(project.summary_id);
   const [summaryEn, setSummaryEn] = useState(project.summary_en);
+const [contentId, setContentId] = useState<ProjectContentBlock[]>(
+  () => normalizeProjectContent(project.content_id, "id")
+);
+const [contentEn, setContentEn] = useState<ProjectContentBlock[]>(
+  () => normalizeProjectContent(project.content_en, "en")
+);
   const [tools, setTools] = useState((project.tools ?? []).join(", "));
   const [githubUrl, setGithubUrl] = useState(project.github_url ?? "");
   const [demoUrl, setDemoUrl] = useState(project.demo_url ?? "");
@@ -145,6 +227,8 @@ export default function EditProjectForm({
           slug: slug.trim(),
           summary_id: summaryId.trim(),
           summary_en: summaryEn.trim(),
+  content_id: contentId,
+  content_en: contentEn,
           tools: tools
             .split(",")
             .map((tool) => tool.trim())
@@ -296,44 +380,24 @@ export default function EditProjectForm({
         )}
       </section>
 
-      
-<section className="project-form-section">
-  <h2>Thumbnail Proyek</h2>
 
-  <div className="project-field">
-    <label htmlFor="coverImage">Upload gambar proyek</label>
+      <section className="project-form-section">
+        <h2>Konten Proyek — Bahasa Indonesia</h2>
+        <ProjectContentEditor
+          language="id"
+          value={contentId}
+          onChange={setContentId}
+        />
+      </section>
 
-    <input
-      id="coverImage"
-      type="file"
-      accept="image/png,image/jpeg,image/webp"
-      onChange={handleCoverChange}
-      disabled={saving}
-    />
-
-    <small>PNG, JPG, atau WebP. Maksimal 5 MB.</small>
-  </div>
-
-  {coverPreview && (
-    <div className="project-cover-preview">
-      <p>Pratinjau gambar</p>
-      <img
-        src={coverPreview}
-        alt="Thumbnail proyek"
-        style={{
-          display: "block",
-          width: "100%",
-          maxWidth: "420px",
-          aspectRatio: "16 / 9",
-          objectFit: "cover",
-          borderRadius: "12px",
-        }}
-      />
-    </div>
-  )}
-</section>
-
-
+      <section className="project-form-section">
+        <h2>Project Content — English</h2>
+        <ProjectContentEditor
+          language="en"
+          value={contentEn}
+          onChange={setContentEn}
+        />
+      </section>
       <section className="project-form-section">
         <h2>Tautan</h2>
 
@@ -387,9 +451,9 @@ export default function EditProjectForm({
       )}
 
       <div className="project-form-actions">
-        <a href="/admin" className="project-cancel-button">
+        <Link href="/admin" className="project-cancel-button">
           Batal
-        </a>
+        </Link>
 
         <button type="submit" disabled={saving}>
           {saving ? "Menyimpan..." : "Simpan Perubahan"}

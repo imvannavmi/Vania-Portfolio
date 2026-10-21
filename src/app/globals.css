@@ -908,3 +908,53 @@ a {
   padding: 5px 10px;
   font-size: 12px;
 }
+
+/* High-contrast dropdown for project content block types */
+.project-content-type-select {
+  min-width: 220px;
+  padding: 12px 14px;
+  border: 1px solid #33483d;
+  border-radius: 8px;
+  outline: none;
+  background-color: #0a1115;
+  color: #f0fff5;
+  color-scheme: dark;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.project-content-type-select:focus {
+  border-color: #65f3a5;
+  box-shadow: 0 0 0 3px rgba(101, 243, 165, 0.1);
+}
+
+.project-content-type-select option {
+  background-color: #0d1419;
+  color: #f0fff5;
+}
+/* High-contrast dropdown for test result status */
+.project-content-status-select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #33483d;
+  border-radius: 8px;
+  outline: none;
+  background-color: #0a1115;
+  color: #f0fff5;
+  color-scheme: dark;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.project-content-status-select:focus {
+  border-color: #65f3a5;
+  box-shadow: 0 0 0 3px rgba(101, 243, 165, 0.1);
+}
+
+.project-content-status-select option {
+  background-color: #0d1419;
+  color: #f0fff5;
+}

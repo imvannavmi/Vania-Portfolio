@@ -1,4 +1,5 @@
 
+import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "../../../../../lib/supabase/server";
 import EditProjectForm from "./edit-form";
@@ -34,7 +35,7 @@ export default async function EditProjectPage({
   const { data: project, error } = await supabase
     .from("projects")
     .select(
-      "id, title_id, title_en, slug, summary_id, summary_en, tools, github_url, demo_url, featured, published, cover_image_url"
+      "id, title_id, title_en, slug, summary_id, summary_en, content_id, content_en, tools, github_url, demo_url, featured, published, cover_image_url"
     )
     .eq("id", id)
     .maybeSingle();
@@ -50,9 +51,9 @@ export default async function EditProjectPage({
   return (
     <main className="admin-main">
       <div className="project-form-intro">
-        <a href="/admin" className="project-cancel-button">
+        <Link href="/admin" className="project-cancel-button">
           ← Kembali ke dashboard
-        </a>
+        </Link>
         <h1>Edit Proyek</h1>
         <p>Perbarui informasi proyek portofoliomu.</p>
       </div>

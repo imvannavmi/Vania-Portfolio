@@ -4,6 +4,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import ProjectContentEditor, { type ProjectContentBlock } from "@/components/admin/project-content-editor";
 
 export default function ProjectForm() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function ProjectForm() {
   const [featured, setFeatured] = useState(false);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [contentId, setContentId] = useState<ProjectContentBlock[]>([]);
+  const [contentEn, setContentEn] = useState<ProjectContentBlock[]>([]);
 
   function makeSlug(value: string) {
     return value
@@ -123,6 +126,8 @@ if (coverFile) {
           slug: finalSlug,
           summary_id: summaryId.trim(),
           summary_en: summaryEn.trim(),
+          content_id: contentId,
+          content_en: contentEn,
           tools: tools.split(",").map((item) => item.trim()).filter(Boolean),
           github_url: githubUrl.trim() || null,
           demo_url: demoUrl.trim() || null,
@@ -257,7 +262,27 @@ if (coverFile) {
 </section>
 
       <section className="project-form-section">
-        <p className="admin-eyebrow">02 / TECH STACK</p>
+        <p className="admin-eyebrow">03 / DETAILED CONTENT</p>
+        <h2>Dokumentasi Proyek</h2>
+        <p className="section-description">
+          Tambahkan detail proyek dalam bahasa Indonesia dan English.
+          Konten akan ditampilkan pada halaman detail proyek.
+        </p>
+
+        <ProjectContentEditor
+          language="id"
+          value={contentId}
+          onChange={setContentId}
+        />
+
+        <ProjectContentEditor
+          language="en"
+          value={contentEn}
+          onChange={setContentEn}
+        />
+      </section>
+      <section className="project-form-section">
+        <p className="admin-eyebrow">04 / TECH STACK</p>
         <h2>Tools & Links</h2>
 
         <div className="project-field">
@@ -298,7 +323,7 @@ if (coverFile) {
       </section>
 
       <section className="project-form-section">
-        <p className="admin-eyebrow">03 / VISIBILITY</p>
+        <p className="admin-eyebrow">05 / VISIBILITY</p>
         <h2>Publikasi</h2>
 
         <label className="project-checkbox">
