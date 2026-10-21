@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
   return (
     <main className="admin-login-page">
       <form className="admin-login-card" onSubmit={handleLogin}>
-        <p className="admin-eyebrow">CYBER.LAB / AUTHENTICATION</p>
+        <p className="admin-eyebrow">by.vania / AUTHENTICATION</p>
         <h1>Admin Login</h1>
         <p className="admin-login-description">
           Masuk untuk mengelola portofolio.

@@ -338,7 +338,7 @@ export default async function ProjectDetailPage({
       </article>
 
       <footer className="site-footer container">
-        <span>© 2026 cyber.lab</span>
+        <span>© 2026 by.vania</span>
         <span>
           {lang === "id"
             ? "Eksperimen. Analisis. Dokumentasi."

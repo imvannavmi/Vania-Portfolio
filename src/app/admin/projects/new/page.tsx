@@ -26,7 +26,7 @@ export default async function NewProjectPage() {
       <aside className="admin-sidebar">
         <Link href="/admin" className="admin-brand">
           <span className="admin-brand-icon">&gt;_</span>
-          <span>cyber<span className="admin-accent">.lab</span></span>
+          <span>by<span className="admin-accent">.van</span></span>
         </Link>
 
         <p className="admin-nav-label">WORKSPACE</p>
@@ -69,7 +69,7 @@ export default async function NewProjectPage() {
         <ProjectForm />
 
         <footer className="admin-footer">
-          <span>CYBER.LAB ADMIN CONSOLE</span>
+          <span>by.vania ADMIN CONSOLE</span>
           <span>NEW PROJECT ENTRY</span>
         </footer>
       </section>

@@ -94,7 +94,7 @@ export default async function PortfolioPage({
         <Link href={`/${locale}`} className="brand">
           <span className="brand-mark">{"</>"}</span>
           <span>
-            cyber<span className="accent">.lab</span>
+            by<span className="accent">.van</span>
           </span>
         </Link>
 
@@ -344,7 +344,7 @@ export default async function PortfolioPage({
 
 
       <footer className="site-footer container">
-        <span>© 2026 cyber.lab</span>
+        <span>© 2026 by.vania</span>
         <span>{t.footer}</span>
       </footer>
     </main>

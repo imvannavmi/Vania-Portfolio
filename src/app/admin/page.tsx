@@ -42,7 +42,7 @@ export default async function AdminPage() {
       <aside className="admin-sidebar">
         <Link href="/admin" className="admin-brand">
           <span className="admin-brand-icon">&gt;_</span>
-          <span>cyber<span className="admin-accent">.lab</span></span>
+          <span>by<span className="admin-accent">.van</span></span>
         </Link>
 
         <p className="admin-nav-label">WORKSPACE</p>
@@ -179,7 +179,7 @@ export default async function AdminPage() {
         </section>
 
         <footer className="admin-footer">
-          <span>CYBER.LAB ADMIN CONSOLE</span>
+          <span>by.vania ADMIN CONSOLE</span>
           <span>SECURE SESSION · 2026</span>
         </footer>
       </section>
